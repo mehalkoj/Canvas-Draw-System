@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Carv-o Jack-o</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <script src="index.js"></script>
+
+    <canvas id="jakcanvas" width="800" height="600" style="border:1px solid #000000;" onclick="drawPoint(event)" onmousemove="getCords(event)">
+    </canvas>
+
+    <div id="xycords"></div>
+
+    <script>
+        var c = document.getElementById("jakcanvas");
+        var ctx = c.getContext("2d");
+        let lastPoint = null;
+        let points = []
+
+        function getCords(event){
+            let x = event.offsetX;
+            let y = event.offsetY;
+
+            //console.log(x, "  ", y);
+            return {xCord: x, yCord: y };
+        }
+
+        function clear_cords(){
+
+        }
+
+
+        function drawPoint(event){
+            let a = getCords(event);
+
+            let x = a.xCord;
+            let y = a.yCord;
+
+            console.log("Point At: " + x + " And " + y);
+            ctx.beginPath();
+            ctx.arc(x, y, 1, 0, 2 * Math.PI);
+            ctx.stroke();
+            //ctx.lineTo(200, 100);
+            lastPoint = { x: x, y: y };
+            points.push(lastPoint);
+            c.addEventListener('mousemove', drawLine);
+        }
+
+        function drawLine(event){
+            if (!lastPoint) return;
+            let cords = getCords(event);
+
+            ctx.clearRect(0, 0, c.width, c.height); // Clear previous drawings
+            redrawPoints(); // Redraw all points
+
+            ctx.beginPath();
+            ctx.moveTo(lastPoint.x, lastPoint.y);
+            ctx.lineTo(cords.xCord, cords.yCord);
+            ctx.stroke();
+
+
+        }
+
+        function redrawPoints() {
+            for (let i = 0; i < points.length; i++){
+                ctx.beginPath();
+                ctx.arc(points[i].x, points[i].y, 1, 0, 2 * Math.PI);
+
+                ctx.fill(); // Redraw the last point
+            }
+
+        }
+
+
+    </script>
+
+
+
+  </body>
+</html>
