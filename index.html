@@ -16,11 +16,12 @@
     <div id="xycords"></div>
 
     <script>
-        var c = document.getElementById("jakcanvas");
-        var ctx = c.getContext("2d");
+        let c = document.getElementById("jakcanvas");
+        let ctx = c.getContext("2d");
         let lastPoint = null;
         let points = []
 
+        //currnt mouse coordinates
         function getCords(event){
             let x = event.offsetX;
             let y = event.offsetY;
@@ -55,23 +56,36 @@
             let cords = getCords(event);
 
             ctx.clearRect(0, 0, c.width, c.height); // Clear previous drawings
-            redrawPoints(); // Redraw all points
+
+            /*for (let i = 0; i < points.length; i++){
+                if (lastpoint == i){
+                    console.log("Point Already Placed");
+                    ctx.moveTo(lastPoint.x, lastPoint.y);
+                    ctx.lineTo(cords.xCord, cords.yCord);
+                }
+
+            }*/
 
             ctx.beginPath();
+            ctx.arc(lastPoint.x, lastPoint.y, 1, 0, 2 * Math.PI);
             ctx.moveTo(lastPoint.x, lastPoint.y);
             ctx.lineTo(cords.xCord, cords.yCord);
             ctx.stroke();
 
-
-        }
-
-        function redrawPoints() {
             for (let i = 0; i < points.length; i++){
                 ctx.beginPath();
                 ctx.arc(points[i].x, points[i].y, 1, 0, 2 * Math.PI);
-
+                ctx.moveTo(points[i].x, points[i].y)
+                ctx.lineTo(points[i + 1].x, points[i + 1].y)
                 ctx.fill(); // Redraw the last point
+                ctx.stroke();
             }
+
+            // If line leads to an already existing point, it will map on and the user can put a new point somewhere else
+            
+
+
+
 
         }
 
