@@ -16,7 +16,7 @@
     <div id="xycords"></div>
 
     <script>
-        let c = document.getElementById("jakcanvas");
+      let c = document.getElementById("jakcanvas");
         let ctx = c.getContext("2d");
         let lastPoint = null;
         let points = []
@@ -25,9 +25,11 @@
         function getCords(event){
             let x = event.offsetX;
             let y = event.offsetY;
+            let radius = 8;
+
 
             //console.log(x, "  ", y);
-            return {xCord: x, yCord: y };
+            return {xCord: x, yCord: y, pointRadius: radius };
         }
 
         function clear_cords(){
@@ -40,14 +42,14 @@
 
             let x = a.xCord;
             let y = a.yCord;
-
             console.log("Point At: " + x + " And " + y);
             ctx.beginPath();
             ctx.arc(x, y, 1, 0, 2 * Math.PI);
             ctx.stroke();
             //ctx.lineTo(200, 100);
-            lastPoint = { x: x, y: y };
+            lastPoint = { x: x, y: y, radius: 8 };
             points.push(lastPoint);
+            // line follows when mouse moves / where line is placed
             c.addEventListener('mousemove', drawLine);
         }
 
@@ -57,37 +59,28 @@
 
             ctx.clearRect(0, 0, c.width, c.height); // Clear previous drawings
 
-            /*for (let i = 0; i < points.length; i++){
-                if (lastpoint == i){
-                    console.log("Point Already Placed");
-                    ctx.moveTo(lastPoint.x, lastPoint.y);
-                    ctx.lineTo(cords.xCord, cords.yCord);
-                }
 
-            }*/
-
+            //Shows lines and points during placement
             ctx.beginPath();
             ctx.arc(lastPoint.x, lastPoint.y, 1, 0, 2 * Math.PI);
+            let radius = ctx.arc(lastPoint.x, lastPoint.y, lastPoint.radius, 0, 2 * Math.PI); // radius
+            ctx.fillStyle = "red";
+            
             ctx.moveTo(lastPoint.x, lastPoint.y);
             ctx.lineTo(cords.xCord, cords.yCord);
             ctx.stroke();
 
+            // For generating the lines after a point is placed
             for (let i = 0; i < points.length; i++){
                 ctx.beginPath();
                 ctx.arc(points[i].x, points[i].y, 1, 0, 2 * Math.PI);
+                ctx.arc(points[i].x, points[i].y, points[i].radius, 0, 2 * Math.PI);
                 ctx.moveTo(points[i].x, points[i].y)
                 ctx.lineTo(points[i + 1].x, points[i + 1].y)
                 ctx.fill(); // Redraw the last point
                 ctx.stroke();
             }
-
-            // If line leads to an already existing point, it will map on and the user can put a new point somewhere else
-            
-
-
-
-
-        }
+          }
 
 
     </script>
